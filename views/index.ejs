@@ -5,8 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
-    <h1>Today is <%=kindOfDay%></h1>
-</body>
+    <body>
+        <div class="list-card">
+            <h1 class="heading-list"> <%= listType %></h1>
+            <ul class="ul-list">
+                <% for(var i=0;i< toDo.length;i++){ %>
+                    <div class="list-item">
+                        <input type="checkbox" name="checked" class="check">
+                        <p> <%= toDo[i] %> </p>
+                    </div>                
+                <% } %>
+            </ul>
+
+            <form action="/" method="post">
+                
+                <input type="text" placeholder="Enter the to-do" name="item">
+                <button type="submit" name= "list" value="<%= listType %>" >Add</button>
+            </form>
+
+        </div>
+
+    </body>
 </html>
