@@ -18,6 +18,7 @@
                 <form action="/delete" method="post">
                     <input type="checkbox"  name="checked" value="<%= toDo[i]._id %>" class="check" onchange="this.form.submit()">
                     <p> <%= toDo[i].name %> </p>
+                    <input type="hidden" value="<%= listType %>" name="listname">
                 </form>
 
             </div>

@@ -52,7 +52,7 @@ var day = today.toLocaleDateString("en-US", options);
 
 //Get Requests
 app.get("/", function (req, res) {
-    
+
     Item.find(function (err, it) {
         if (err) {
             console.log(err);
@@ -81,7 +81,7 @@ app.get("/", function (req, res) {
 
 app.get("/:param", function (req, res) {
     const route = req.params.param;
-    const routeName=route.charAt(0).toUpperCase() + route.slice(1);
+    const routeName = route.charAt(0).toUpperCase() + route.slice(1);
     List.findOne({
         name: route
     }, function (err, it) {
@@ -96,8 +96,6 @@ app.get("/:param", function (req, res) {
                 res.redirect("/" + route);
 
             } else {
-
-                console.log(it);
                 res.render("index", {
                     listType: routeName,
                     toDo: it.items
@@ -116,20 +114,23 @@ app.post("/", function (req, res) {
     const newItem = new Item({
         name: req.body.item
     });
-    let listType= req.body.list;
-    listType=listType.toLowerCase();
+    let listType = req.body.list;
+
     console.log(listType);
-    if(listType==String(day)){
+    if (listType == String(day)) {
         newItem.save();
         res.redirect("/");
-    }else{       
-        List.findOne({name:listType},function(err,it){
-            if(err) console.log(err);
-            else{
+    } else {
+        listType = listType.toLowerCase();
+        List.findOne({
+            name: listType
+        }, function (err, it) {
+            if (err) console.log(err);
+            else {
                 it.items.push(newItem);
                 it.save();
                 console.log(it.items);
-                res.redirect("/"+listType);
+                res.redirect("/" + listType);
             }
         })
     }
@@ -139,12 +140,38 @@ app.post("/", function (req, res) {
 app.post("/delete", function (req, res) {
     console.log(req.body);
     const deleteItem = req.body.checked;
-    Item.findByIdAndRemove(deleteItem, {
-        useFindAndModify: true
-    }, function (err) {
-        if (err) console.log(err);
-    })
-    res.redirect("/");
+    let listType = req.body.listname;
+
+    if (listType == day) {
+        Item.findByIdAndRemove(deleteItem, {
+            useFindAndModify: true
+        }, function (err) {
+            if (err) console.log(err);
+        });
+        res.redirect("/");
+    } else {
+        listType = listType.toLowerCase();
+
+        List.findOneAndUpdate({
+            name: listType
+        }, {
+            $pull: {
+                items: {
+                    _id: deleteItem
+                }
+            }
+        }, {
+            new: true
+        }, function (err, it) {
+            console.log(it);
+            if (err) console.log(err);
+            else {
+                res.redirect("/" + listType);
+            }
+        });
+    }
+
+
 })
 
 //Listen Request
