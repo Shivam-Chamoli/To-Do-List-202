@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,25 +8,30 @@
     <title>Document</title>
     <link rel="stylesheet" href="index.css">
 </head>
-    <body>
-        <div class="list-card">
-            <h1 class="heading-list"> <%= listType %></h1>
-            <ul class="ul-list">
-                <% for(var i=0;i< toDo.length;i++){ %>
-                    <div class="list-item">
-                        <input type="checkbox" name="checked" class="check">
-                        <p> <%= toDo[i] %> </p>
-                    </div>                
-                <% } %>
-            </ul>
 
-            <form action="/" method="post">
-                
-                <input type="text" placeholder="Enter the to-do" name="item">
-                <button type="submit" name= "list" value="<%= listType %>" >Add</button>
-            </form>
+<body>
+    <div class="list-card">
+        <h1 class="heading-list"> <%= listType %></h1>
+        <ul class="ul-list">
+            <% for(var i=0;i< toDo.length;i++){ %>
+            <div class="list-item">
+                <form action="/delete" method="post">
+                    <input type="checkbox"  name="checked" value="<%= toDo[i]._id %>" class="check" onchange="this.form.submit()">
+                    <p> <%= toDo[i].name %> </p>
+                </form>
 
-        </div>
+            </div>
+            <% } %>
+        </ul>
 
-    </body>
+        <form action="/" method="post">
+
+            <input type="text" placeholder="Enter the to-do" name="item">
+            <button type="submit" name="list" value="<%= listType %>">Add</button>
+        </form>
+
+    </div>
+
+</body>
+
 </html>
